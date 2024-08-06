@@ -2,14 +2,24 @@ services:
   app0:
     build: ./app
     environment:
-      - POD_NUMBER=1
+      - POD_NUMBER=0
   
   app1:
     build: ./app
     environment:
-      - POD_NUMBER=2
+      - POD_NUMBER=1
 
   app2:
     build: ./app
     environment:
-      - POD_NUMBER=3
+      - POD_NUMBER=2
+  
+  web:
+    image: nginx
+    volumes:
+    - ./load-balance:/etc/nginx/templates
+    ports:
+    - "8080:80"
+    environment:
+    - NGINX_HOST=foobar.com
+    - NGINX_PORT=80

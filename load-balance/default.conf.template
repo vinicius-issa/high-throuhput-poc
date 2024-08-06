@@ -1,0 +1,15 @@
+upstream backend {
+  server app0:3000;
+  server app1:3000;
+  server app2:3000;
+}
+
+server {
+  listen 80;
+    
+  include /etc/nginx/mime.types;
+
+  location / {
+      proxy_pass http://backend/;
+  }
+}
