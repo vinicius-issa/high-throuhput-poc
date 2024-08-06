@@ -1,0 +1,15 @@
+services:
+  app0:
+    build: ./app
+    environment:
+      - POD_NUMBER=1
+  
+  app1:
+    build: ./app
+    environment:
+      - POD_NUMBER=2
+
+  app2:
+    build: ./app
+    environment:
+      - POD_NUMBER=3
