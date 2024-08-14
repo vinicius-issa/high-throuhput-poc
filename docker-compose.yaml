@@ -3,16 +3,19 @@ services:
     build: ./app
     environment:
       - POD_NUMBER=0
+      - MONGO_URL=mongodb://root:example@mongo:27017
   
   app1:
     build: ./app
     environment:
       - POD_NUMBER=1
+      - MONGO_URL=mongodb://root:example@mongo:27017
 
   app2:
     build: ./app
     environment:
       - POD_NUMBER=2
+      - MONGO_URL=mongodb://root:example@mongo:27017
   
   web:
     image: nginx
@@ -39,3 +42,12 @@ services:
     depends_on:
       web:
         condition: service_healthy
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
