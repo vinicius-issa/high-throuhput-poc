@@ -23,3 +23,19 @@ services:
     environment:
     - NGINX_HOST=foobar.com
     - NGINX_PORT=80
+    depends_on:
+    - app0
+    - app1
+    - app2
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://web"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+  
+  client:
+    build: ./client
+    depends_on:
+      web:
+        condition: service_healthy
