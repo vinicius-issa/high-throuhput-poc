@@ -1,18 +1,29 @@
 services:
   app0:
     build: ./app
+    image: app-backend
+    volumes:
+      - ./app/src:/usr/src/ap/src
     environment:
       - POD_NUMBER=0
       - MONGO_URL=mongodb://root:example@mongo:27017
   
   app1:
-    build: ./app
+    image: app-backend
+    volumes:
+      - ./app/src:/usr/src/app/src
+    depends_on:
+      - app0
     environment:
       - POD_NUMBER=1
       - MONGO_URL=mongodb://root:example@mongo:27017
 
   app2:
-    build: ./app
+    image: app-backend
+    volumes:
+      - ./app/src:/usr/src/app/src
+    depends_on:
+      - app0
     environment:
       - POD_NUMBER=2
       - MONGO_URL=mongodb://root:example@mongo:27017

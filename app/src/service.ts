@@ -15,7 +15,7 @@ export class Service {
 
   private async generateTicketNumber (): Promise<number> {
     await this.sleep(500)
-    return Math.floor(Math.random() * 1000000)
+    return Math.floor(Math.random() * 1_000_000)
   }
 
   public async sellTicket(ticket: { userId: string, eventId: string }): Promise<Ticket> {
