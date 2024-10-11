@@ -9,8 +9,13 @@ export class Service {
     this.limit = Number(process.env.PUBLIC_LIMIT) || 20_000;
   }
 
-  private generateTicketNumber () {
-    return Math.floor(Math.random() * 1000)
+  private async sleep (ms: number) {
+    new Promise(resolve => setTimeout(resolve, ms))
+  } 
+
+  private async generateTicketNumber (): Promise<number> {
+    await this.sleep(500)
+    return Math.floor(Math.random() * 1000000)
   }
 
   public async sellTicket(ticket: { userId: string, eventId: string }): Promise<Ticket> {
@@ -18,7 +23,13 @@ export class Service {
     if(totalSold >= this.limit) {
       throw new Error("No ticket enough")
     }
-    const ticketNumber = `#${this.generateTicketNumber()}`
+    const ticketNumber = await this.generateTicketNumber()
+
+    const existTicket = await this.repository.existTicket(ticketNumber)
+    if(existTicket) {
+      throw new Error("TicketId exist")
+    }
+
     const ticketSelled = {
       ...ticket,
       ticketNumber,
