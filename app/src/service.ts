@@ -14,27 +14,31 @@ export class Service {
   } 
 
   private async generateTicketNumber (): Promise<number> {
-    await this.sleep(500)
+    await this.sleep(500) //some expensive process
     return Math.floor(Math.random() * 1_000_000)
   }
 
-  public async sellTicket(ticket: { userId: string, eventId: string }): Promise<Ticket> {
+  private async validateTicketLimit (): Promise<void> {
     const totalSold = await this.repository.countTickets()
     if(totalSold >= this.limit) {
       throw new Error("No ticket enough")
     }
-    const ticketNumber = await this.generateTicketNumber()
+  }
 
+  public async sellTicket(ticket: { userId: string, eventId: string }): Promise<Ticket> {
+    const ticketNumber = await this.generateTicketNumber()
+    
     const existTicket = await this.repository.existTicket(ticketNumber)
     if(existTicket) {
       throw new Error("TicketId exist")
-    }
-
+      }
+      
     const ticketSelled = {
       ...ticket,
       ticketNumber,
-    };
-
+      };
+      
+    await this.validateTicketLimit();
     await this.repository.insertTicket(ticketSelled);
     return ticketSelled;
   }
