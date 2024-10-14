@@ -2,57 +2,13 @@ services:
   app0:
     build: ./app
     image: app-backend
+    ports:
+      - 8080:3000
     volumes:
       - ./app/src:/usr/src/ap/src
     environment:
       - POD_NUMBER=0
       - MONGO_URL=mongodb://root:example@mongo:27017
-  
-  app1:
-    image: app-backend
-    volumes:
-      - ./app/src:/usr/src/app/src
-    depends_on:
-      - app0
-    environment:
-      - POD_NUMBER=1
-      - MONGO_URL=mongodb://root:example@mongo:27017
-
-  app2:
-    image: app-backend
-    volumes:
-      - ./app/src:/usr/src/app/src
-    depends_on:
-      - app0
-    environment:
-      - POD_NUMBER=2
-      - MONGO_URL=mongodb://root:example@mongo:27017
-  
-  web:
-    image: nginx
-    volumes:
-    - ./load-balance:/etc/nginx/templates
-    ports:
-    - "8080:80"
-    environment:
-    - NGINX_HOST=foobar.com
-    - NGINX_PORT=80
-    depends_on:
-    - app0
-    - app1
-    - app2
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://web"]
-      interval: 10s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
-  
-  # client:
-  #   build: ./client
-  #   depends_on:
-  #     web:
-  #       condition: service_healthy
 
   mongo:
     image: mongo

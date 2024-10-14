@@ -12,8 +12,16 @@ export class Controller {
     const payload = request.body;
     try {
       await this.service.sellTicket(payload);
-    } catch {
-      response.status(409).send();
+    } catch (error: any) {
+        if(error.message === "No ticket enough") {
+          response.status(400).send();
+          return
+        }
+        if(error.message === "TicketId exist") {
+          response.status(409).send();
+          return
+        }
+      response.status(500).send();
       return
     }
     
