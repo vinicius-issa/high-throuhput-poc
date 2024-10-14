@@ -3,10 +3,12 @@ services:
     build: ./app
     image: app-backend
     volumes:
-      - ./app/src:/usr/src/ap/src
+      - ./app/src:/usr/src/app/src
     environment:
       - POD_NUMBER=0
       - MONGO_URL=mongodb://root:example@mongo:27017
+      - REDIS_URL=redis://cache:6379
+      - PUBLIC_LIMIT=20000
   
   app1:
     image: app-backend
@@ -17,6 +19,8 @@ services:
     environment:
       - POD_NUMBER=1
       - MONGO_URL=mongodb://root:example@mongo:27017
+      - REDIS_URL=redis://cache:6379
+      - PUBLIC_LIMIT=20000
 
   app2:
     image: app-backend
@@ -27,6 +31,17 @@ services:
     environment:
       - POD_NUMBER=2
       - MONGO_URL=mongodb://root:example@mongo:27017
+      - REDIS_URL=redis://cache:6379
+      - PUBLIC_LIMIT=20000
+  
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --loglevel warning
+    volumes: 
+      - ./cache:/data
   
   web:
     image: nginx
@@ -39,14 +54,14 @@ services:
     - NGINX_PORT=80
     depends_on:
     - app0
-    - app1
-    - app2
     healthcheck:
       test: ["CMD", "curl", "-f", "http://web"]
       interval: 10s
       timeout: 30s
       retries: 5
       start_period: 30s
+    logging:
+      driver: none
   
   # client:
   #   build: ./client
@@ -62,3 +77,5 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+    logging:
+      driver: none

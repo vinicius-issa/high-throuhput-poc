@@ -10,7 +10,7 @@ export class AppFactory {
   public static generateDependencies() {
     if(!this.controller) {
       this.repository = new Repository();
-      this.service = new Service(this.repository);
+      this.service = new Service();
       this.controller = new Controller(this.service)
     }
   }
