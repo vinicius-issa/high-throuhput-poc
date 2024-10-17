@@ -5,10 +5,11 @@ services:
     ports:
       - 8080:3000
     volumes:
-      - ./app/src:/usr/src/ap/src
+      - ./app/src:/usr/src/app/src
     environment:
       - POD_NUMBER=0
       - MONGO_URL=mongodb://root:example@mongo:27017
+      - PUBLIC_LIMIT=1000
 
   mongo:
     image: mongo
