@@ -28,6 +28,7 @@ export class Service {
     userId: string;
     eventId: string;
   }): Promise<Ticket> {
+    await this.validateTicketLimit();
     await this.sleep(500); //some expensive process
     const ticketNumber = await this.generateTicketNumber();
 
